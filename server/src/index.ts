@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { chat } from './gemini.js';
 
-dotenv.config();
+dotenv.config({ path: '.env', silent: true } as any);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
