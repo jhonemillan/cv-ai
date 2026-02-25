@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-// import * as PDFParse from 'pdf-parse';
+import * as PDFParse from 'pdf-parse';
 
 dotenv.config();
 
@@ -28,8 +28,7 @@ async function loadCVContent(): Promise<string> {
 
         const files = fs.readdirSync(dir);
 
-        // Check for PDF - Temporarily disabled for debugging Vercel 500
-        /*
+        // Check for PDF
         const pdfFile = files.find(file => file.endsWith('.pdf'));
         if (pdfFile) {
             const pdfPath = path.join(dir, pdfFile);
@@ -42,7 +41,6 @@ async function loadCVContent(): Promise<string> {
                 console.error('Error parsing PDF:', error);
             }
         }
-        */
 
         // Check for TXT
         const txtFile = files.find(file => file.endsWith('.txt') && file.includes('cv'));
@@ -79,7 +77,7 @@ Aquí está la información detallada del CV para tu referencia:
 ${cvContent}
 `;
 
-    const modelId = process.env.GEMINI_MODEL_ID || 'gemini-3.1-pro-preview';
+    const modelId = process.env.GEMINI_MODEL_ID || 'gemini-1.5-flash';
     let model;
     try {
         console.log(`Generating model with: ${modelId}`);
@@ -96,7 +94,7 @@ ${cvContent}
     const chatSession = model.startChat({
         history: history.map(h => ({
             role: h.role === 'user' ? 'user' : 'model',
-            parts: [{ text: h.content }],
+            parts: [{ text: h.text }],
         })),
     });
 

@@ -49,10 +49,14 @@ const Chat: React.FC = () => {
             });
 
             const data = await response.json();
-            setMessages(prev => [...prev, { role: 'bot', text: data.response || data.error }]);
-        } catch (error) {
+            if (data.error) {
+                setMessages(prev => [...prev, { role: 'bot', text: `Error: ${data.details || data.error}` }]);
+            } else {
+                setMessages(prev => [...prev, { role: 'bot', text: data.response }]);
+            }
+        } catch (error: any) {
             console.error('Chat error:', error);
-            setMessages(prev => [...prev, { role: 'bot', text: 'Lo siento, hubo un error al conectar con mi cerebro artificial.' }]);
+            setMessages(prev => [...prev, { role: 'bot', text: 'Lo siento, hubo un error al conectar con mi cerebro artificial. Por favor, revisa tu conexión.' }]);
         } finally {
             setLoading(false);
         }
