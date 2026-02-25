@@ -73,6 +73,7 @@ ${cvContent}
         throw modelError;
     }
 
+    console.log(`Starting chat session with ${history.length} history items...`);
     const chatSession = model.startChat({
         history: history.map(h => ({
             role: h.role === 'user' ? 'user' : 'model',
@@ -81,8 +82,11 @@ ${cvContent}
     });
 
     try {
+        console.log(`Sending message: "${message.substring(0, 50)}..."`);
         const result = await chatSession.sendMessage(message);
+        console.log('Message sent, waiting for response...');
         const response = await result.response;
+        console.log('Response received.');
         const text = response.text();
         console.log('Gemini response text length:', text.length);
         return text;

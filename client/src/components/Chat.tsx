@@ -5,7 +5,24 @@ const Chat: React.FC = () => {
     const [messages, setMessages] = useState<{ role: 'user' | 'bot'; text: string }[]>([]);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [isOnline, setIsOnline] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const checkStatus = async () => {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                setIsOnline(data.status === 'online' && data.gemini === 'available');
+            } catch (error) {
+                setIsOnline(false);
+            }
+        };
+
+        checkStatus();
+        const interval = setInterval(checkStatus, 30000); // Check every 30 seconds
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
@@ -53,10 +70,18 @@ const Chat: React.FC = () => {
             {/* Chat Widget */}
             <div className={`chat-widget ${isOpen ? 'open' : ''}`}>
                 <div className="chat-header">
-                    <div className="status"></div>
+                    <div className={`status ${isOnline ? 'online' : 'offline'}`} style={{
+                        backgroundColor: isOnline ? '#10b981' : '#6b7280',
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        marginRight: 10
+                    }}></div>
                     <div style={{ flex: 1 }}>
                         <strong style={{ display: 'block', fontSize: '0.9rem' }}>Chat con Jhon AI</strong>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>En línea ahora</span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
+                            {isOnline ? 'En línea ahora' : 'Fuera de línea'}
+                        </span>
                     </div>
                     <button
                         onClick={() => setIsOpen(false)}

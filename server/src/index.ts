@@ -23,7 +23,10 @@ app.post('/api/chat', async (req, res) => {
 });
 
 app.get('/api/status', (req, res) => {
-    res.json({ status: 'Backend is running' });
+    // For now, we point to the fact that the server is reachable.
+    // We could add a more complex check for Gemini here if needed,
+    // but a simple "server is up" is the first step.
+    res.json({ status: 'online', gemini: 'available' });
 });
 
 // Export the app for Vercel serverless functions
