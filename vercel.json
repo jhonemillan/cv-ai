@@ -2,12 +2,14 @@
     "version": 2,
     "builds": [
         {
-            "src": "api/*.ts",
+            "src": "api/index.ts",
             "use": "@vercel/node",
             "config": {
                 "includeFiles": [
                     "server/*.pdf",
-                    "server/*.txt"
+                    "server/*.txt",
+                    "*.pdf",
+                    "*.txt"
                 ]
             }
         },
@@ -19,14 +21,14 @@
             }
         }
     ],
-    "routes": [
+    "rewrites": [
         {
-            "src": "/api/(.*)",
-            "dest": "api/index.ts"
+            "source": "/api/(.*)",
+            "destination": "api/index.ts"
         },
         {
-            "src": "/(.*)",
-            "dest": "client/$1"
+            "source": "/(.*)",
+            "destination": "client/$1"
         }
     ]
 }
