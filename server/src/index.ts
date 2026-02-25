@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { chat } from './gemini';
+import { chat } from './gemini.js';
 
 dotenv.config();
 

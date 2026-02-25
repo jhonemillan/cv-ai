@@ -1,4 +1,4 @@
-import { chat } from './gemini';
+import { chat } from './gemini.js';
 
 async function test() {
     console.log('Testing Gemini chat from src...');
