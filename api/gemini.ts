@@ -1,14 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
-import * as PDFParse from 'pdf-parse';
-
-dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import PDFParse from 'pdf-parse';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -35,7 +28,7 @@ async function loadCVContent(): Promise<string> {
                 const pdfPath = path.join(dir, pdfFile);
                 console.log(`Found CV PDF at: ${pdfPath}`);
                 const dataBuffer = fs.readFileSync(pdfPath);
-                const data = await (PDFParse as any).default(dataBuffer);
+                const data = await (PDFParse as any)(dataBuffer);
                 return data.text;
             }
 
