@@ -23,10 +23,19 @@ app.post('/api/chat', async (req, res) => {
 });
 
 app.get('/api/status', (req, res) => {
-    // For now, we point to the fact that the server is reachable.
-    // We could add a more complex check for Gemini here if needed,
-    // but a simple "server is up" is the first step.
-    res.json({ status: 'online', gemini: 'available' });
+    const hasKey = !!process.env.GEMINI_API_KEY;
+    const modelId = process.env.GEMINI_MODEL_ID;
+
+    console.log(`Status check: hasKey=${hasKey}, modelId=${modelId}`);
+
+    res.json({
+        status: 'online',
+        gemini: hasKey ? 'available' : 'missing_api_key',
+        config: {
+            hasApiKey: hasKey,
+            modelId: modelId || 'default'
+        }
+    });
 });
 
 // Export the app for Vercel serverless functions

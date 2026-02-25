@@ -99,7 +99,7 @@ const Chat: React.FC = () => {
                         <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
                             <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>👋</div>
                             <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>
-                                ¡Hola! Soy el asistente virtual de Jhon Millán. Puedo responderte sobre su experiencia técnica, proyectos o formación acadmética.
+                                ¡Hola! Soy el asistente virtual de Jhon Millán. Puedo responderte sobre su experiencia técnica, proyectos o formación académica.
                             </p>
                         </div>
                     )}

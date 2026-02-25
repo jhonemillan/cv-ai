@@ -13,28 +13,45 @@ const __dirname = path.dirname(__filename);
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 async function loadCVContent(): Promise<string> {
-    const serverDir = path.join(__dirname, '../');
+    const cwd = process.cwd();
+    // Possible locations for data files on Vercel vs Local
+    const possibleDirs = [
+        path.join(cwd, 'server'),
+        cwd,
+        path.join(cwd, '..')
+    ];
 
-    // Check for PDF
-    const pdfFile = fs.readdirSync(serverDir).find(file => file.endsWith('.pdf'));
-    if (pdfFile) {
-        console.log(`Loading CV from PDF: ${pdfFile}`);
-        try {
-            const dataBuffer = fs.readFileSync(path.join(serverDir, pdfFile));
-            const data = await (PDFParse as any).default(dataBuffer);
-            return data.text;
-        } catch (error) {
-            console.error('Error parsing PDF:', error);
+    console.log(`Searching for CV files in: ${possibleDirs.join(', ')}`);
+
+    for (const dir of possibleDirs) {
+        if (!fs.existsSync(dir)) continue;
+
+        const files = fs.readdirSync(dir);
+
+        // Check for PDF
+        const pdfFile = files.find(file => file.endsWith('.pdf'));
+        if (pdfFile) {
+            const pdfPath = path.join(dir, pdfFile);
+            console.log(`Found CV PDF at: ${pdfPath}`);
+            try {
+                const dataBuffer = fs.readFileSync(pdfPath);
+                const data = await (PDFParse as any).default(dataBuffer);
+                return data.text;
+            } catch (error) {
+                console.error('Error parsing PDF:', error);
+            }
+        }
+
+        // Check for TXT
+        const txtFile = files.find(file => file.endsWith('.txt') && file.includes('cv'));
+        if (txtFile) {
+            const txtPath = path.join(dir, txtFile);
+            console.log(`Found CV TXT at: ${txtPath}`);
+            return fs.readFileSync(txtPath, 'utf-8');
         }
     }
 
-    // Check for TXT
-    const txtFile = fs.readdirSync(serverDir).find(file => file.endsWith('.txt') && file.includes('cv'));
-    if (txtFile) {
-        console.log(`Loading CV from TXT: ${txtFile}`);
-        return fs.readFileSync(path.join(serverDir, txtFile), 'utf-8');
-    }
-
+    console.warn("No CV content found in any of the search directories.");
     return "No CV content found.";
 }
 
