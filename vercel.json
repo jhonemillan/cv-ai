@@ -3,7 +3,13 @@
     "builds": [
         {
             "src": "server/src/index.ts",
-            "use": "@vercel/node"
+            "use": "@vercel/node",
+            "config": {
+                "includeFiles": [
+                    "server/*.pdf",
+                    "server/*.txt"
+                ]
+            }
         },
         {
             "src": "client/package.json",

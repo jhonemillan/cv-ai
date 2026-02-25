@@ -13,13 +13,23 @@ app.use(express.json());
 
 app.post('/api/chat', async (req, res) => {
     const { message, history } = req.body;
+    console.log('Chat request received');
     try {
         const response = await chat(message, history);
         res.json({ response });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error in chat endpoint:', error);
-        res.status(500).json({ error: 'Failed to communicate with Gemini' });
+        res.status(500).json({
+            error: 'Failed to communicate with Gemini',
+            details: error.message
+        });
     }
+});
+
+// Global error handler for uncaught exceptions in the app
+app.use((err: any, req: any, res: any, next: any) => {
+    console.error('Uncaught Error:', err);
+    res.status(500).json({ error: 'Internal Server Error', details: err.message });
 });
 
 app.get('/api/status', (req, res) => {
