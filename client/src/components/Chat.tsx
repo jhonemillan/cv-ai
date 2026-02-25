@@ -1,0 +1,115 @@
+import React, { useState, useEffect, useRef } from 'react';
+
+const Chat: React.FC = () => {
+    const [input, setInput] = useState('');
+    const [messages, setMessages] = useState<{ role: 'user' | 'bot'; text: string }[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
+    }, [messages]);
+
+    const sendMessage = async () => {
+        if (!input.trim() || loading) return;
+
+        const userMessage = input;
+        setInput('');
+        setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
+        setLoading(true);
+
+        try {
+            const history = messages.map(m => ({
+                role: m.role === 'user' ? 'user' : 'model',
+                parts: [{ text: m.text }]
+            }));
+
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage, history })
+            });
+
+            const data = await response.json();
+            setMessages(prev => [...prev, { role: 'bot', text: data.response || data.error }]);
+        } catch (error) {
+            console.error('Chat error:', error);
+            setMessages(prev => [...prev, { role: 'bot', text: 'Lo siento, hubo un error al conectar con mi cerebro artificial.' }]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <>
+            {/* Launcher Button */}
+            <div className="chat-launcher" onClick={() => setIsOpen(!isOpen)}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </div>
+
+            {/* Chat Widget */}
+            <div className={`chat-widget ${isOpen ? 'open' : ''}`}>
+                <div className="chat-header">
+                    <div className="status"></div>
+                    <div style={{ flex: 1 }}>
+                        <strong style={{ display: 'block', fontSize: '0.9rem' }}>Chat con Jhon AI</strong>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>En línea ahora</span>
+                    </div>
+                    <button
+                        onClick={() => setIsOpen(false)}
+                        style={{ background: 'none', padding: 4, color: 'var(--text-dim)' }}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <div className="messages" ref={scrollRef}>
+                    {messages.length === 0 && (
+                        <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>👋</div>
+                            <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>
+                                ¡Hola! Soy el asistente virtual de Jhon Millán. Puedo responderte sobre su experiencia técnica, proyectos o formación acadmética.
+                            </p>
+                        </div>
+                    )}
+                    {messages.map((m, i) => (
+                        <div key={i} className={`message ${m.role}`}>
+                            {m.text}
+                        </div>
+                    ))}
+                    {loading && (
+                        <div className="message bot" style={{ display: 'flex', gap: 4 }}>
+                            <span className="dot">.</span><span className="dot">.</span><span className="dot">.</span>
+                        </div>
+                    )}
+                </div>
+
+                <div className="chat-input-container">
+                    <div className="chat-input">
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                            placeholder="Escribe tu pregunta..."
+                        />
+                        <button onClick={sendMessage}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
+export default Chat;

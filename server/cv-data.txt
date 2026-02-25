@@ -1,0 +1,9 @@
+[INSTRUCCIONES: Reemplaza este texto con el contenido de tu CV (Experiencia, Educación, Logros, etc.)]
+
+Nombre: [Tu Nombre]
+Perfil: Desarrollador Node.js y TypeScript...
+Experiencia:
+- Empresa A: Logros...
+Educación:
+- Universidad B: Título...
+Habilidades: Node.js, TypeScript, React, Gemini AI.
