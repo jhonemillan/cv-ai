@@ -77,7 +77,7 @@ Aquí está la información detallada del CV para tu referencia:
 ${cvContent}
 `;
 
-    const modelId = process.env.GEMINI_MODEL_ID || 'gemini-1.5-flash';
+    const modelId = process.env.GEMINI_MODEL_ID || 'gemini-2.0-flash';
     let model;
     try {
         console.log(`Generating model with: ${modelId}`);
@@ -92,10 +92,7 @@ ${cvContent}
 
     console.log(`Starting chat session with ${history.length} history items...`);
     const chatSession = model.startChat({
-        history: history.map(h => ({
-            role: h.role === 'user' ? 'user' : 'model',
-            parts: [{ text: h.text }],
-        })),
+        history: history,
     });
 
     try {
