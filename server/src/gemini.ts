@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import * as PDFParse from 'pdf-parse';
+// import * as PDFParse from 'pdf-parse';
 
 dotenv.config();
 
@@ -28,7 +28,8 @@ async function loadCVContent(): Promise<string> {
 
         const files = fs.readdirSync(dir);
 
-        // Check for PDF
+        // Check for PDF - Temporarily disabled for debugging Vercel 500
+        /*
         const pdfFile = files.find(file => file.endsWith('.pdf'));
         if (pdfFile) {
             const pdfPath = path.join(dir, pdfFile);
@@ -41,6 +42,7 @@ async function loadCVContent(): Promise<string> {
                 console.error('Error parsing PDF:', error);
             }
         }
+        */
 
         // Check for TXT
         const txtFile = files.find(file => file.endsWith('.txt') && file.includes('cv'));
