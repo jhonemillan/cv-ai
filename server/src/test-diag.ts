@@ -1,4 +1,4 @@
-import { PDFParse } from 'pdf-parse';
+import PDFParse from 'pdf-parse';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -21,9 +21,7 @@ async function test() {
         if (fs.existsSync(pdfPath)) {
             console.log('2. Reading PDF file...');
             const dataBuffer = fs.readFileSync(pdfPath);
-            const parser = new PDFParse({ data: dataBuffer });
-            console.log('3. Extracting text from PDF...');
-            const data = await parser.getText();
+            const data = await (PDFParse as any)(dataBuffer);
             console.log('4. PDF Text extracted length:', data.text.length);
             console.log('PDF Text snippet:', data.text.substring(0, 200));
         } else {

@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import fs from 'fs';
 import path from 'path';
-import { PDFParse } from 'pdf-parse';
+import PDFParse from 'pdf-parse';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -28,8 +28,7 @@ async function loadCVContent(): Promise<string> {
                 const pdfPath = path.join(dir, pdfFile);
                 console.log(`Found CV PDF at: ${pdfPath}`);
                 const dataBuffer = fs.readFileSync(pdfPath);
-                const parser = new PDFParse({ data: dataBuffer });
-                const data = await parser.getText();
+                const data = await PDFParse(dataBuffer);
                 return data.text;
             }
 
@@ -70,7 +69,7 @@ Aquí está la información detallada del CV para tu referencia:
 ${cvContent}
 `;
 
-    const modelId = process.env.GEMINI_MODEL_ID || 'gemini-2.0-flash';
+    const modelId = process.env.GEMINI_MODEL_ID || 'gemini-2.5-flash';
     const model = genAI.getGenerativeModel({
         model: modelId,
         systemInstruction: systemInstruction,

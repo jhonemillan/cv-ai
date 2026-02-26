@@ -26,7 +26,7 @@ async function diagnose() {
         console.error('Failed to list models:', error.message);
     }
 
-    const testModels = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-2.0-flash-exp', 'gemini-3.1-pro-preview'];
+    const testModels = ['gemini-2.5-flash', 'gemini-3-flash-preview', 'gemini-3.1-pro-preview'];
 
     for (const modelName of testModels) {
         console.log(`\n2. Testing model: ${modelName}`);

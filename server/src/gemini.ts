@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import * as PDFParse from 'pdf-parse';
+import PDFParse from 'pdf-parse';
 
 dotenv.config();
 
@@ -35,7 +35,7 @@ async function loadCVContent(): Promise<string> {
             console.log(`Found CV PDF at: ${pdfPath}`);
             try {
                 const dataBuffer = fs.readFileSync(pdfPath);
-                const data = await (PDFParse as any).default(dataBuffer);
+                const data = await PDFParse(dataBuffer);
                 return data.text;
             } catch (error) {
                 console.error('Error parsing PDF:', error);
@@ -77,7 +77,7 @@ Aquí está la información detallada del CV para tu referencia:
 ${cvContent}
 `;
 
-    const modelId = process.env.GEMINI_MODEL_ID || 'gemini-2.0-flash';
+    const modelId = process.env.GEMINI_MODEL_ID || 'gemini-2.5-flash';
     let model;
     try {
         console.log(`Generating model with: ${modelId}`);

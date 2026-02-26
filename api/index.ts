@@ -35,7 +35,7 @@ app.get('/api/status', (req, res) => {
         gemini: hasKey ? 'available' : 'missing_api_key',
         config: {
             hasApiKey: hasKey,
-            modelId: modelId || 'gemini-2.0-flash'
+            modelId: modelId || 'gemini-2.5-flash'
         }
     });
 });
