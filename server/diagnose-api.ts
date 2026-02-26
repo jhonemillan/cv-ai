@@ -17,12 +17,12 @@ async function diagnose() {
 
     try {
         console.log('1. Listing Models...');
-        const result = await genAI.listModels();
+        const result = await (genAI as any).listModels();
         console.log('Successfully listed models. Count:', result.models.length);
-        result.models.forEach(m => {
+        result.models.forEach((m: any) => {
             console.log(`- ${m.name} (${m.displayName})`);
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to list models:', error.message);
     }
 
@@ -34,7 +34,7 @@ async function diagnose() {
             const model = genAI.getGenerativeModel({ model: modelName });
             const result = await model.generateContent('Say Hi');
             console.log(`Success for ${modelName}:`, result.response.text());
-        } catch (error) {
+        } catch (error: any) {
             console.log(`Failed for ${modelName}:`, error.message);
         }
     }

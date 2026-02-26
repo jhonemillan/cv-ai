@@ -13,12 +13,12 @@ async function listModels() {
     const genAI = new GoogleGenerativeAI(apiKey);
     try {
         console.log('Fetching models...');
-        const result = await genAI.listModels();
+        const result = await (genAI as any).listModels();
         console.log('Available models:');
-        result.models.forEach(model => {
+        result.models.forEach((model: any) => {
             console.log(`- ${model.name} (${model.displayName})`);
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error listing models:', error);
     }
 }

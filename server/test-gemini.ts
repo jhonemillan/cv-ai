@@ -1,4 +1,4 @@
-import { chat } from './src/gemini.ts';
+import { chat } from './src/gemini.js';
 
 async function test() {
     console.log('Testing Gemini chat...');
