@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { chat } from './gemini.js';
+import { chat } from '../../api/gemini.js';
 
 dotenv.config({ path: '.env', silent: true } as any);
 
