@@ -5,7 +5,13 @@ import PDFParse from 'pdf-parse';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
+let cachedCVContent: string | null = null;
+
 async function loadCVContent(): Promise<string> {
+    if (cachedCVContent !== null) {
+        return cachedCVContent;
+    }
+
     const cwd = process.cwd();
     // Vercel project structure: CV files are in root or server/
     const possibleDirs = [
@@ -29,7 +35,9 @@ async function loadCVContent(): Promise<string> {
                 console.log(`Found CV PDF at: ${pdfPath}`);
                 const dataBuffer = fs.readFileSync(pdfPath);
                 const data = await PDFParse(dataBuffer);
-                return data.text;
+                const text = data.text;
+                cachedCVContent = text;
+                return text;
             }
 
             // Check for TXT
@@ -37,14 +45,18 @@ async function loadCVContent(): Promise<string> {
             if (txtFile) {
                 const txtPath = path.join(dir, txtFile);
                 console.log(`Found CV TXT at: ${txtPath}`);
-                return fs.readFileSync(txtPath, 'utf-8');
+                const txtContent = fs.readFileSync(txtPath, 'utf-8');
+                cachedCVContent = txtContent;
+                return txtContent;
             }
         } catch (err) {
             console.error(`Error reading directory ${dir}:`, err);
         }
     }
 
-    return "No CV content found.";
+    const defaultContent = "No CV content found.";
+    cachedCVContent = defaultContent;
+    return defaultContent;
 }
 
 export async function chat(message: string, history: any[] = []) {
