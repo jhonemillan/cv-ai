@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
 
 :root {
-  /* Midnight Amber Palette */
+  /* Midnight Emerald Palette (FinTech Trust) */
   --bg-deep: #020617;
   --bg-dark: #0f172a;
   --primary: #6366f1;
-  --primary-glow: rgba(99, 102, 241, 0.4);
-  --accent: #f59e0b;
-  /* Amber/Orange */
-  --accent-glow: rgba(245, 158, 11, 0.4);
+  --primary-glow: rgba(99, 102, 241, 0.2);
+  --accent: #10b981;
+  /* Emerald 500 */
+  --accent-glow: rgba(16, 185, 129, 0.15);
   --text-main: #f8fafc;
   --text-dim: #94a3b8;
   --glass: rgba(15, 23, 42, 0.6);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --selection: rgba(245, 158, 11, 0.3);
+  --selection: rgba(16, 185, 129, 0.3);
 }
 
 * {
@@ -31,8 +31,8 @@ body {
   font-family: 'Outfit', sans-serif;
   background-color: var(--bg-deep);
   background-image:
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.05) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
   color: var(--text-main);
   line-height: 1.6;
   overflow-x: hidden;
@@ -132,15 +132,111 @@ h4 {
 .social-btn {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.5rem;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
   background: var(--glass);
   border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  color: white;
+  border-radius: 8px;
+  color: var(--text-dim);
   text-decoration: none;
   font-weight: 500;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
+}
+
+/* --- Hero CTAs --- */
+.hero-ctas {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.8rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.cta-btn.primary {
+  background: var(--accent);
+  color: var(--bg-deep);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.cta-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.3);
+  background: #34d399;
+  /* Emerald 400 */
+}
+
+.cta-btn.secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid var(--glass-border);
+}
+
+.cta-btn.secondary:hover {
+  border-color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Clients Band --- */
+.clients-band-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.015);
+  margin-top: -3rem;
+  margin-bottom: 4rem;
+}
+
+.clients-band-title {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.clients-band {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+  max-width: 1400px;
+}
+
+.clients-band span {
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  opacity: 0.5;
+  transition: opacity 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  cursor: default;
+}
+
+.clients-band span:hover {
+  opacity: 1;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .social-btn:hover {
@@ -279,7 +375,7 @@ h4 {
 
 .card:hover {
   transform: translateY(-8px);
-  border-color: rgba(245, 158, 11, 0.3);
+  border-color: rgba(16, 185, 129, 0.3);
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
 }
 
@@ -311,7 +407,7 @@ h4 {
 }
 
 .card:hover .tag {
-  border-color: rgba(245, 158, 11, 0.2);
+  border-color: rgba(16, 185, 129, 0.2);
   color: var(--accent);
 }
 
