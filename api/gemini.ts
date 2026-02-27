@@ -2,7 +2,37 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import fs from 'fs';
 import path from 'path';
 import * as PDFParseRaw from 'pdf-parse';
+import * as nodemailer from 'nodemailer';
 const PDFParse = (PDFParseRaw as any).default || PDFParseRaw;
+
+async function sendLeadNotification(leadEmail: string, originalMessage: string) {
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !process.env.NOTIFICATION_EMAIL) {
+        console.warn('Faltan variables de entorno para enviar correos (SMTP_USER, SMTP_PASS, NOTIFICATION_EMAIL).');
+        return;
+    }
+
+    try {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: process.env.NOTIFICATION_EMAIL,
+            subject: `🚨 NUEVO LEAD B2B: ${leadEmail}`,
+            text: `¡Hola Jhon!\n\nUn cliente potencial interactuó con tu Agente de IA y dejó su correo electrónico.\n\nCorreo capturado: ${leadEmail}\n\nMensaje original:\n"${originalMessage}"\n\nPor favor contáctalo a la brevedad.`,
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`Notificación enviada a ${process.env.NOTIFICATION_EMAIL} sobre el lead ${leadEmail}`);
+    } catch (error) {
+        console.error('Error al enviar notificación por correo:', error);
+    }
+}
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -63,6 +93,21 @@ async function loadCVContent(): Promise<string> {
 export async function chat(message: string, history: any[] = []) {
     const cvContent = await loadCVContent();
     console.log(message)
+
+    // 🔥 1. INTERCEPTOR DE CAPTURA DE LEADS (CORREOS)
+    const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/;
+    const emailMatch = message.match(emailRegex);
+
+    if (emailMatch) {
+        const leadEmail = emailMatch[0];
+        console.log(`Interceptado correo de lead: ${leadEmail}`);
+
+        // Wait for the notification to be sent to prevent Vercel from killing the background process
+        await sendLeadNotification(leadEmail, message).catch(console.error);
+
+        return "He registrado tu correo. Jhon se pondrá en contacto contigo a la brevedad posible para agendar la auditoría o conversar sobre tu proyecto. ¡Gracias!";
+    }
+
     // 🔥 2. EL INTERCEPTOR COMERCIAL (MIDDLEWARE DE VENTAS)
     // Uso de RegEx para detectar intenciones de compra (soporta plurales y acentos ignorando distinción de mayúsculas/minúsculas)
     const pricingRegex = /\b(precio|precios|tarifa|tarifas|cu[aá]nto\s+cobra|cu[aá]nto\s+cuesta|costo|costos|cotizaci[oó]n|cotizaciones)\b/i;
