@@ -20,8 +20,7 @@ const Chat: React.FC = () => {
         };
 
         checkStatus();
-        const interval = setInterval(checkStatus, 30000); // Check every 30 seconds
-        return () => clearInterval(interval);
+        // Removed the setInterval polling to save Vercel Serverless invocations
     }, []);
 
     useEffect(() => {
@@ -100,16 +99,16 @@ const Chat: React.FC = () => {
 
                 <div className="messages" ref={scrollRef}>
                     {messages.length === 0 && (
-    <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⚡️</div>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.95rem', fontWeight: 500, marginBottom: '1rem' }}>
-            Soy el Agente de Arquitectura de Jhon.
-        </p>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>
-            ¿Estás lidiando con deuda técnica en un monolito, necesitas escalar tu backend en AWS, o buscas integrar agentes de IA en tu empresa de forma segura? Cuéntame tu desafío técnico.
-        </p>
-    </div>
-)}
+                        <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⚡️</div>
+                            <p style={{ color: 'var(--text-dim)', fontSize: '0.95rem', fontWeight: 500, marginBottom: '1rem' }}>
+                                Soy el Agente de Arquitectura de Jhon.
+                            </p>
+                            <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>
+                                ¿Estás lidiando con deuda técnica en un monolito, necesitas escalar tu backend en AWS, o buscas integrar agentes de IA en tu empresa de forma segura? Cuéntame tu desafío técnico.
+                            </p>
+                        </div>
+                    )}
                     {messages.map((m, i) => (
                         <div key={i} className={`message ${m.role}`}>
                             {m.text}
